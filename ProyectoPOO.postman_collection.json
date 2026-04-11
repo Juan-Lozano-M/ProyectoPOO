@@ -1,0 +1,223 @@
+{
+  "info": {
+    "_postman_id": "4f2c5e28-0c72-4b2b-9c9f-9a82e6cb4ad1",
+    "name": "ProyectoPOO API",
+    "description": "Coleccion Postman para CRUD de documentos y vehiculos, busquedas y asociacion de documentos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "documentId", "value": "1" },
+    { "key": "vehicleId", "value": "1" },
+    { "key": "plate", "value": "ABC123" },
+    { "key": "vehicleType", "value": "AUTOMOVIL" },
+    { "key": "documentCode", "value": "SOAT" },
+    { "key": "documentState", "value": "EN_VERIFICACION" }
+  ],
+  "item": [
+    {
+      "name": "Documentos - CRUD",
+      "item": [
+        {
+          "name": "Crear documento",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SOAT\",\n  \"name\": \"Seguro Obligatorio\",\n  \"applicability\": \"AM\",\n  \"mandatory\": \"RR\",\n  \"description\": \"Seguro obligatorio para ambos tipos\"\n}"
+            },
+            "url": "{{baseUrl}}/api/documents"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+                  "var data = pm.response.json();",
+                  "if (data && data.id) { pm.collectionVariables.set('documentId', String(data.id)); }",
+                  "if (data && data.code) { pm.collectionVariables.set('documentCode', String(data.code)); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar documentos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/documents"
+          }
+        },
+        {
+          "name": "Obtener documento por id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/documents/{{documentId}}"
+          }
+        },
+        {
+          "name": "Actualizar documento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SOAT\",\n  \"name\": \"Seguro Obligatorio Actualizado\",\n  \"applicability\": \"AM\",\n  \"mandatory\": \"RR\",\n  \"description\": \"Documento actualizado\"\n}"
+            },
+            "url": "{{baseUrl}}/api/documents/{{documentId}}"
+          }
+        },
+        {
+          "name": "Eliminar documento",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/documents/{{documentId}}"
+          }
+        },
+        {
+          "name": "Buscar documento por codigo",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/documents/search?code={{documentCode}}"
+          }
+        },
+        {
+          "name": "Buscar documentos por aplicabilidad",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/documents/searchByApplicability?app=AM"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehiculos - CRUD",
+      "item": [
+        {
+          "name": "Crear vehiculo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"AUTOMOVIL\",\n  \"plate\": \"ABC123\",\n  \"serviceType\": \"PR\",\n  \"fuelType\": \"GASOLINA\",\n  \"passengersCapacity\": 5,\n  \"color\": \"#1A2B3C\",\n  \"model\": 2023,\n  \"brand\": \"Toyota\",\n  \"line\": \"Corolla\",\n  \"documents\": [\n    {\n      \"document\": { \"id\": {{documentId}} },\n      \"issueDate\": \"2026-01-01\",\n      \"expiryDate\": \"2027-01-01\"\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicles"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+                  "var data = pm.response.json();",
+                  "if (data && data.id) { pm.collectionVariables.set('vehicleId', String(data.id)); }",
+                  "if (data && data.plate) { pm.collectionVariables.set('plate', String(data.plate)); }",
+                  "if (data && data.type) { pm.collectionVariables.set('vehicleType', String(data.type)); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar vehiculos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/vehicles"
+          }
+        },
+        {
+          "name": "Obtener vehiculo por id",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
+          }
+        },
+        {
+          "name": "Actualizar vehiculo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"AUTOMOVIL\",\n  \"plate\": \"ABC123\",\n  \"serviceType\": \"PR\",\n  \"fuelType\": \"GASOLINA\",\n  \"passengersCapacity\": 4,\n  \"color\": \"#112233\",\n  \"model\": 2024,\n  \"brand\": \"Toyota\",\n  \"line\": \"Corolla XLI\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
+          }
+        },
+        {
+          "name": "Eliminar vehiculo",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehiculos - Busquedas",
+      "item": [
+        {
+          "name": "Buscar vehiculo por placa",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/vehicles/byPlate?plate={{plate}}"
+          }
+        },
+        {
+          "name": "Buscar vehiculos por tipo",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/vehicles/searchByType?type={{vehicleType}}"
+          }
+        },
+        {
+          "name": "Buscar vehiculos por codigo de documento",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/vehicles/searchByDocumentCode?code={{documentCode}}"
+          }
+        },
+        {
+          "name": "Buscar vehiculos por estado de documento",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/vehicles/searchByDocumentState?state={{documentState}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehiculos - Documentos Asociados",
+      "item": [
+        {
+          "name": "Agregar documento a vehiculo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": { \"id\": {{documentId}} },\n  \"issueDate\": \"2026-01-01\",\n  \"expiryDate\": \"2026-12-31\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/documents"
+          }
+        }
+      ]
+    }
+  ]
+}
+

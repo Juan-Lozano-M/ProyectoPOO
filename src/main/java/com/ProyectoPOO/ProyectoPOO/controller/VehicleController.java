@@ -10,18 +10,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/vehicles")
-@RequiredArgsConstructor
+@RestController // Expone endpoints REST con serialización JSON automática.
+@RequestMapping("/api/vehicles") // Ruta base del recurso vehículos.
+@RequiredArgsConstructor // Lombok crea constructor para inyectar VehicleService.
 public class VehicleController {
     private final VehicleService vehicleService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Vehicle v) {
         try {
+            // Convierte body JSON a Vehicle y delega reglas de negocio al servicio.
             Vehicle saved = vehicleService.create(v);
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (IllegalArgumentException e) {
+            // Error de validación de entrada/regla de negocio -> 400.
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -36,6 +38,7 @@ public class VehicleController {
         try {
             return ResponseEntity.ok(vehicleService.getById(id));
         } catch (IllegalArgumentException e) {
+            // Si el recurso no existe, responde 404 sin cuerpo.
             return ResponseEntity.notFound().build();
         }
     }
@@ -43,6 +46,7 @@ public class VehicleController {
     @GetMapping("/byPlate")
     public ResponseEntity<?> getByPlate(@RequestParam String plate) {
         try {
+            // @RequestParam toma placa desde query string: /byPlate?plate=AAA999.
             return ResponseEntity.ok(vehicleService.getByPlate(plate));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body("No existe vehículo con la placa: " + plate);
@@ -52,9 +56,11 @@ public class VehicleController {
     @GetMapping("/searchByType")
     public ResponseEntity<?> findByType(@RequestParam String type) {
         try {
+            // valueOf parsea String a enum VehicleType.
             VehicleType vt = VehicleType.valueOf(type);
             return ResponseEntity.ok(vehicleService.findByType(vt));
         } catch (Exception e) {
+            // Si el enum es inválido o hay error de parseo, retorna 400.
             return ResponseEntity.badRequest().body("Tipo de vehículo inválido");
         }
     }
@@ -67,6 +73,7 @@ public class VehicleController {
     @GetMapping("/searchByDocumentState")
     public ResponseEntity<?> findByDocumentState(@RequestParam String state) {
         try {
+            // Convierte el parámetro textual al enum de estado de documento.
             DocumentState ds = DocumentState.valueOf(state);
             return ResponseEntity.ok(vehicleService.findByDocumentState(ds));
         } catch (Exception e) {
@@ -77,6 +84,7 @@ public class VehicleController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Vehicle v) {
         try {
+            // Update usa id de URL + datos del body.
             return ResponseEntity.ok(vehicleService.update(id, v));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
@@ -92,6 +100,7 @@ public class VehicleController {
     @PostMapping("/{id}/documents")
     public ResponseEntity<?> addDocument(@PathVariable Long id, @RequestBody VehicleDocument vd) {
         try {
+            // Endpoint de asociación: agrega documento a vehículo existente.
             Vehicle updated = vehicleService.addDocumentToVehicle(id, vd);
             return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {

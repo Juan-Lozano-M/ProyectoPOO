@@ -1,6 +1,7 @@
 package com.ProyectoPOO.ProyectoPOO.model;
 
+// `serviceType` = tipo de servicio del vehiculo.
 public enum ServiceType {
-    PU, PR
+    PU, // Publico.
+    PR  // Privado.
 }
-

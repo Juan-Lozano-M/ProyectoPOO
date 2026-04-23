@@ -3,8 +3,11 @@ package com.ProyectoPOO.ProyectoPOO.model;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
+import java.util.Base64;
 
 @Entity
 // Evita duplicar el mismo tipo de documento para el mismo vehiculo.
@@ -42,6 +45,29 @@ public class VehicleDocument {
     // `state` = estado del documento asociado al vehiculo.
     @Enumerated(EnumType.STRING)
     private DocumentState state;
+
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "pdf_blob", columnDefinition = "LONGBLOB")
+    @JsonIgnore
+    private byte[] pdfBlob;
+
+    @JsonProperty("pdfBase64")
+    public String getPdfBase64() {
+        if (pdfBlob == null || pdfBlob.length == 0) {
+            return null;
+        }
+        return Base64.getEncoder().encodeToString(pdfBlob);
+    }
+
+    @JsonProperty("pdfBase64")
+    public void setPdfBase64(String pdfBase64) {
+        if (pdfBase64 == null || pdfBase64.isBlank()) {
+            this.pdfBlob = null;
+            return;
+        }
+        this.pdfBlob = Base64.getDecoder().decode(pdfBase64);
+    }
 
     // Callback de ciclo de vida: se ejecuta automáticamente en INSERT/UPDATE.
     @PrePersist

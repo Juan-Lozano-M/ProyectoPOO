@@ -59,7 +59,7 @@
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- Dependencias explícitas para validación Jakarta -->
+		<!-- Dependencias explicitas para validacion Jakarta -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>

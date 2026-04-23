@@ -1,6 +1,9 @@
 // Controlador REST para Vehicle
 package com.ProyectoPOO.ProyectoPOO.controller;
 
+import com.ProyectoPOO.ProyectoPOO.dto.AssignVehicleRequest;
+import com.ProyectoPOO.ProyectoPOO.dto.ChangeDriverStateRequest;
+import com.ProyectoPOO.ProyectoPOO.dto.VehicleDocumentsBatchRequest;
 import com.ProyectoPOO.ProyectoPOO.model.*;
 import com.ProyectoPOO.ProyectoPOO.service.VehicleService;
 import lombok.RequiredArgsConstructor;
@@ -103,6 +106,39 @@ public class VehicleController {
             // Endpoint de asociación: agrega documento a vehículo existente.
             Vehicle updated = vehicleService.addDocumentToVehicle(id, vd);
             return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/documents/batch")
+    public ResponseEntity<?> upsertDocuments(@PathVariable Long id, @RequestBody VehicleDocumentsBatchRequest request) {
+        try {
+            if (request == null || request.getDocuments() == null || request.getDocuments().isEmpty()) {
+                return ResponseEntity.badRequest().body("Debe enviar al menos un documento");
+            }
+            return ResponseEntity.ok(vehicleService.upsertVehicleDocuments(id, request.getDocuments()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/drivers/{personaId}/vehicles")
+    public ResponseEntity<?> assignVehicleToDriver(@PathVariable Long personaId, @RequestBody AssignVehicleRequest request) {
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(vehicleService.assignVehicleToDriver(personaId, request.getVehicleId(), request.getAssociationDate(), request.getState()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/drivers/{personaId}/vehicles/{vehicleId}/state")
+    public ResponseEntity<?> changeDriverState(@PathVariable Long personaId,
+                                               @PathVariable Long vehicleId,
+                                               @RequestBody ChangeDriverStateRequest request) {
+        try {
+            return ResponseEntity.ok(vehicleService.changeDriverState(personaId, vehicleId, request.getState()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

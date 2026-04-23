@@ -1,12 +1,18 @@
 {
   "info": {
     "_postman_id": "4f2c5e28-0c72-4b2b-9c9f-9a82e6cb4ad1",
-    "name": "ProyectoPOO API",
-    "description": "Coleccion Postman para CRUD de documentos y vehiculos, busquedas y asociacion de documentos.",
+    "name": "ProyectoPOO API - Entrega 2",
+    "description": "Coleccion actualizada con seguridad por token + API key, gestion de personas/usuarios y consultas publicas.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" },
+    { "key": "apiKey", "value": "" },
+    { "key": "adminLogin", "value": "" },
+    { "key": "adminPassword", "value": "" },
+    { "key": "personId", "value": "1" },
+    { "key": "driverPersonId", "value": "1" },
     { "key": "documentId", "value": "1" },
     { "key": "vehicleId", "value": "1" },
     { "key": "plate", "value": "ABC123" },
@@ -16,14 +22,210 @@
   ],
   "item": [
     {
-      "name": "Documentos - CRUD",
+      "name": "01 - Auth (Publico)",
       "item": [
         {
-          "name": "Crear documento",
+          "name": "POST Login administrativo",
           "request": {
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"login\": \"{{adminLogin}}\",\n  \"password\": \"{{adminPassword}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "var data = pm.response.json();",
+                  "if (data && data.token) { pm.collectionVariables.set('token', String(data.token)); }",
+                  "if (data && data.apiKey) { pm.collectionVariables.set('apiKey', String(data.apiKey)); }",
+                  "if (data && data.login) { pm.collectionVariables.set('adminLogin', String(data.login)); }"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 - Personas (Protegido)",
+      "item": [
+        {
+          "name": "POST Crear persona ADMIN (genera usuario)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"1012345678\",\n  \"identificationType\": \"CC\",\n  \"names\": \"Carlos\",\n  \"lastNames\": \"Perez\",\n  \"email\": \"carlos.perez.admin@example.com\",\n  \"personType\": \"A\"\n}"
+            },
+            "url": "{{baseUrl}}/api/persons"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+                  "var data = pm.response.json();",
+                  "if (data && data.id) { pm.collectionVariables.set('personId', String(data.id)); }",
+                  "if (data && data.adminUserData && data.adminUserData.login) { pm.collectionVariables.set('adminLogin', String(data.adminUserData.login)); }",
+                  "if (data && data.adminUserData && data.adminUserData.generatedPassword) { pm.collectionVariables.set('adminPassword', String(data.adminUserData.generatedPassword)); }",
+                  "if (data && data.adminUserData && data.adminUserData.apiKey) { pm.collectionVariables.set('apiKey', String(data.adminUserData.apiKey)); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST Crear persona CONDUCTOR",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"1022334455\",\n  \"identificationType\": \"CC\",\n  \"names\": \"Ana\",\n  \"lastNames\": \"Gomez\",\n  \"email\": \"ana.gomez.driver@example.com\",\n  \"personType\": \"C\"\n}"
+            },
+            "url": "{{baseUrl}}/api/persons"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+                  "var data = pm.response.json();",
+                  "if (data && data.id) { pm.collectionVariables.set('driverPersonId', String(data.id)); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Listar personas",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": "{{baseUrl}}/api/persons"
+          }
+        },
+        {
+          "name": "GET Persona por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": "{{baseUrl}}/api/persons/{{personId}}"
+          }
+        },
+        {
+          "name": "PUT Actualizar persona",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"1012345678\",\n  \"identificationType\": \"CC\",\n  \"names\": \"Carlos Andres\",\n  \"lastNames\": \"Perez\",\n  \"email\": \"carlos.perez.admin@example.com\",\n  \"personType\": \"A\"\n}"
+            },
+            "url": "{{baseUrl}}/api/persons/{{personId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Usuarios (Protegido)",
+      "item": [
+        {
+          "name": "PUT Cambiar password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"Admin1234!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users/{{adminLogin}}/password"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) { pm.collectionVariables.set('adminPassword', 'Admin1234!'); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET Regenerar API key",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": "{{baseUrl}}/api/users/{{adminLogin}}/regenerate-apikey"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "var data = pm.response.json();",
+                  "if (data && data.apiKey) { pm.collectionVariables.set('apiKey', String(data.apiKey)); }"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 - Documentos (Protegido)",
+      "item": [
+        {
+          "name": "POST Crear documento",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
             ],
             "body": {
               "mode": "raw",
@@ -37,7 +239,6 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
                   "var data = pm.response.json();",
                   "if (data && data.id) { pm.collectionVariables.set('documentId', String(data.id)); }",
                   "if (data && data.code) { pm.collectionVariables.set('documentCode', String(data.code)); }"
@@ -47,25 +248,35 @@
           ]
         },
         {
-          "name": "Listar documentos",
+          "name": "GET Listar documentos",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
             "url": "{{baseUrl}}/api/documents"
           }
         },
         {
-          "name": "Obtener documento por id",
+          "name": "GET Documento por ID",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
             "url": "{{baseUrl}}/api/documents/{{documentId}}"
           }
         },
         {
-          "name": "Actualizar documento",
+          "name": "PUT Actualizar documento",
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
             ],
             "body": {
               "mode": "raw",
@@ -75,37 +286,51 @@
           }
         },
         {
-          "name": "Eliminar documento",
+          "name": "DELETE Eliminar documento",
           "request": {
             "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
             "url": "{{baseUrl}}/api/documents/{{documentId}}"
           }
         },
         {
-          "name": "Buscar documento por codigo",
+          "name": "GET Buscar por codigo",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
             "url": "{{baseUrl}}/api/documents/search?code={{documentCode}}"
           }
         },
         {
-          "name": "Buscar documentos por aplicabilidad",
+          "name": "GET Buscar por aplicabilidad",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
             "url": "{{baseUrl}}/api/documents/searchByApplicability?app=AM"
           }
         }
       ]
     },
     {
-      "name": "Vehiculos - CRUD",
+      "name": "05 - Vehiculos (Protegido)",
       "item": [
         {
-          "name": "Crear vehiculo",
+          "name": "POST Crear vehiculo",
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
             ],
             "body": {
               "mode": "raw",
@@ -119,7 +344,6 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
                   "var data = pm.response.json();",
                   "if (data && data.id) { pm.collectionVariables.set('vehicleId', String(data.id)); }",
                   "if (data && data.plate) { pm.collectionVariables.set('plate', String(data.plate)); }",
@@ -130,25 +354,35 @@
           ]
         },
         {
-          "name": "Listar vehiculos",
+          "name": "GET Listar vehiculos",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
             "url": "{{baseUrl}}/api/vehicles"
           }
         },
         {
-          "name": "Obtener vehiculo por id",
+          "name": "GET Vehiculo por ID",
           "request": {
             "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
             "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
           }
         },
         {
-          "name": "Actualizar vehiculo",
+          "name": "PUT Actualizar vehiculo",
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
             ],
             "body": {
               "mode": "raw",
@@ -158,62 +392,162 @@
           }
         },
         {
-          "name": "Eliminar vehiculo",
+          "name": "DELETE Eliminar vehiculo",
           "request": {
             "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
             "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}"
           }
-        }
-      ]
-    },
-    {
-      "name": "Vehiculos - Busquedas",
-      "item": [
-        {
-          "name": "Buscar vehiculo por placa",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/vehicles/byPlate?plate={{plate}}"
-          }
         },
         {
-          "name": "Buscar vehiculos por tipo",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/vehicles/searchByType?type={{vehicleType}}"
-          }
-        },
-        {
-          "name": "Buscar vehiculos por codigo de documento",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/vehicles/searchByDocumentCode?code={{documentCode}}"
-          }
-        },
-        {
-          "name": "Buscar vehiculos por estado de documento",
-          "request": {
-            "method": "GET",
-            "url": "{{baseUrl}}/api/vehicles/searchByDocumentState?state={{documentState}}"
-          }
-        }
-      ]
-    },
-    {
-      "name": "Vehiculos - Documentos Asociados",
-      "item": [
-        {
-          "name": "Agregar documento a vehiculo",
+          "name": "POST Agregar documento a vehiculo",
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
             ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"document\": { \"id\": {{documentId}} },\n  \"issueDate\": \"2026-01-01\",\n  \"expiryDate\": \"2026-12-31\"\n}"
             },
             "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/documents"
+          }
+        },
+        {
+          "name": "POST Cargue masivo documentos (batch)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documents\": [\n    {\n      \"documentId\": {{documentId}},\n      \"issueDate\": \"2026-01-01\",\n      \"expiryDate\": \"2027-01-01\",\n      \"pdfBase64\": \"JVBERi0xLjQKJcTl8uXrPg==\"\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicles/{{vehicleId}}/documents/batch"
+          }
+        },
+        {
+          "name": "POST Asociar conductor a vehiculo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\": {{vehicleId}},\n  \"associationDate\": \"2026-04-22\",\n  \"state\": \"EA\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicles/drivers/{{driverPersonId}}/vehicles"
+          }
+        },
+        {
+          "name": "PUT Cambiar estado conductor-vehiculo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state\": \"PO\"\n}"
+            },
+            "url": "{{baseUrl}}/api/vehicles/drivers/{{driverPersonId}}/vehicles/{{vehicleId}}/state"
+          }
+        },
+        {
+          "name": "GET Buscar por placa",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": "{{baseUrl}}/api/vehicles/byPlate?plate={{plate}}"
+          }
+        },
+        {
+          "name": "GET Buscar por tipo",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": "{{baseUrl}}/api/vehicles/searchByType?type={{vehicleType}}"
+          }
+        },
+        {
+          "name": "GET Buscar por codigo documento",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": "{{baseUrl}}/api/vehicles/searchByDocumentCode?code={{documentCode}}"
+          }
+        },
+        {
+          "name": "GET Buscar por estado documento",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "X-API-KEY", "value": "{{apiKey}}" }
+            ],
+            "url": "{{baseUrl}}/api/vehicles/searchByDocumentState?state={{documentState}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Consultas Publicas",
+      "item": [
+        {
+          "name": "GET Vehiculos con documentos vencidos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/vehicles/expired-documents"
+          }
+        },
+        {
+          "name": "GET Conductores que pueden operar",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/drivers/can-operate"
+          }
+        },
+        {
+          "name": "GET Vehiculo por placa con detalle",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/vehicles/by-plate?plate={{plate}}"
+          }
+        },
+        {
+          "name": "GET Vehiculos por vencer en N dias",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/vehicles/expiring-documents?days=30"
+          }
+        },
+        {
+          "name": "GET Total personas por tipo",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/public/persons/count-by-type"
           }
         }
       ]

@@ -67,6 +67,13 @@ public class Vehicle {
     @JsonManagedReference
     private Set<VehicleDocument> documents = new HashSet<>();
 
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JsonManagedReference(value = "vehicle-driver")
+    private Set<VehicleDriver> drivers = new HashSet<>();
+
     // Estos hooks de JPA ejecutan validate() automáticamente antes de INSERT y UPDATE.
     @PrePersist
     @PreUpdate
@@ -117,6 +124,10 @@ public class Vehicle {
         // 7) for-each: recorre cada VehicleDocument y sincroniza la referencia inversa (vd -> this).
         for (VehicleDocument vd : documents) {
             vd.setVehicle(this);
+        }
+
+        for (VehicleDriver relation : drivers) {
+            relation.setVehicle(this);
         }
     }
 }

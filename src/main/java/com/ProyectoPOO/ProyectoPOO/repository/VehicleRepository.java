@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +19,11 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     List<Vehicle> findByDocumentCode(@Param("code") String code);
 
     List<Vehicle> findDistinctByDocumentsState(DocumentState state);
+
+    @Query("select distinct v from Vehicle v join v.documents vd where vd.expiryDate < :today")
+    List<Vehicle> findWithExpiredDocuments(@Param("today") LocalDate today);
+
+    @Query("select distinct v from Vehicle v join v.documents vd where vd.expiryDate between :today and :limit")
+    List<Vehicle> findWithDocumentsExpiringBetween(@Param("today") LocalDate today, @Param("limit") LocalDate limit);
 }
 

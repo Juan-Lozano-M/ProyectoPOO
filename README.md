@@ -246,3 +246,39 @@ Actualmente existe prueba de servicio en `src/test/java/com/ProyectoPOO/Proyecto
 
 ## 11) Mejoras sugeridas
 
+
+## 12) Entrega 2 (Personas, Usuarios, Seguridad y Consultas Publicas)
+
+### Endpoints protegidos (requieren `Authorization: Bearer <token>` y `X-API-KEY`)
+
+- `POST /api/persons`
+- `GET /api/persons`
+- `GET /api/persons/{id}`
+- `PUT /api/persons/{id}`
+- `PUT /api/users/{login}/password`
+- `GET /api/users/{login}/regenerate-apikey`
+- `POST /api/vehicles/{id}/documents/batch`
+- `POST /api/vehicles/drivers/{personaId}/vehicles`
+- `PUT /api/vehicles/drivers/{personaId}/vehicles/{vehicleId}/state`
+- Todos los endpoints previos de `documents` y `vehicles` (excepto los de `/api/public/**`).
+
+### Endpoint de autenticacion
+
+- `POST /api/auth/login` (publico)
+
+```json
+{
+  "login": "cp12345678",
+  "password": "password-generado"
+}
+```
+
+### Endpoints publicos (sin token)
+
+- `GET /api/public/vehicles/expired-documents`
+- `GET /api/public/drivers/can-operate`
+- `GET /api/public/vehicles/by-plate?plate=ABC123`
+- `GET /api/public/vehicles/expiring-documents?days=30`
+- `GET /api/public/persons/count-by-type`
+
+

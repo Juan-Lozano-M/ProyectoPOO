@@ -126,8 +126,10 @@ public class Vehicle {
             vd.setVehicle(this);
         }
 
-        for (VehicleDriver relation : drivers) {
-            relation.setVehicle(this);
+        if (drivers != null) {
+            for (VehicleDriver relation : drivers) {
+                relation.setVehicle(this);
+            }
         }
     }
 }

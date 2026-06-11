@@ -2,6 +2,7 @@ package com.ProyectoPOO.ProyectoPOO.controller;
 
 import com.ProyectoPOO.ProyectoPOO.security.PublicEndpoint;
 import com.ProyectoPOO.ProyectoPOO.service.PersonService;
+import com.ProyectoPOO.ProyectoPOO.service.TrayectoService;
 import com.ProyectoPOO.ProyectoPOO.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class PublicQueryController {
 
     private final VehicleService vehicleService;
     private final PersonService personService;
+    private final TrayectoService trayectoService;
 
     @GetMapping("/vehicles/expired-documents")
     public ResponseEntity<?> vehiclesWithExpiredDocuments() {
@@ -44,5 +46,34 @@ public class PublicQueryController {
     public ResponseEntity<?> totalPersonsByType() {
         return ResponseEntity.ok(personService.countByType());
     }
+
+    // ==================== ENDPOINTS PÚBLICOS DE TRAYECTOS ====================
+
+    /**
+     * GET /api/public/trayectos/rutas/{routeCode}
+     * Retorna todos los trayectos de una ruta ordenados por parada
+     */
+    @GetMapping("/trayectos/rutas/{routeCode}")
+    public ResponseEntity<?> getTrayectosByRoute(@PathVariable String routeCode) {
+        try {
+            return ResponseEntity.ok(trayectoService.getTrayectosByRouteCode(routeCode));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    /**
+     * GET /api/public/trayectos/disabled-vehicles-or-restricted-drivers
+     * Retorna rutas donde el vehículo NO está habilitado O el conductor está restringido
+     */
+    @GetMapping("/trayectos/disabled-vehicles-or-restricted-drivers")
+    public ResponseEntity<?> getTrayectosWithDisabledVehiclesOrRestrictedDrivers() {
+        try {
+            return ResponseEntity.ok(trayectoService.getTrayectosWithDisabledVehiclesOrRestrictedDrivers());
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
 }
+
 

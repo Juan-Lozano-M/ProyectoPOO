@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Trayectos - ProyectoPOO</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="/css/trayectos.css">
+</head>
+
+<body>
+<div class="app">
+
+    <!-- HEADER -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">
+                🗺️
+            </div>
+
+            <div class="brand-text">
+                <h1>Visualizador de Trayectos</h1>
+                <p>ProyectoPOO - Gestión de Rutas de Vehículos</p>
+            </div>
+        </div>
+
+        <button class="help-btn" type="button" title="Ayuda">
+
+        </button>
+    </header>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+
+        <!-- PANEL IZQUIERDO -->
+        <aside class="sidebar">
+
+            <section class="search-card">
+
+                <div class="section-title">
+                    <div class="section-icon">
+                        🔍
+                    </div>
+                    <h2>Búsqueda de Rutas</h2>
+                </div>
+
+                <form class="search-form" onsubmit="event.preventDefault(); searchRoute();">
+                    <div class="form-group">
+                        <label for="routeCode">Código de Ruta:</label>
+
+                        <input
+                                type="text"
+                                id="routeCode"
+                                name="routeCode"
+                                placeholder="Ej. RUTA-001"
+                                autocomplete="off"
+                        >
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn btn-primary" type="submit">
+                            Buscar Ruta
+                        </button>
+
+                        <button class="btn btn-secondary" type="button" onclick="clearSearch()">
+                            Limpiar
+                        </button>
+                    </div>
+                </form>
+
+                <div class="divider"></div>
+
+                <div id="messageContainer" class="message-container"></div>
+
+                <!-- ESTADO VACÍO -->
+                <div class="empty-state" id="trayectosList">
+                    <div class="empty-icon">
+                        <span>📍</span>
+                    </div>
+
+                    <h3>Ingrese un código de ruta para comenzar</h3>
+
+                    <p>
+                        Busque una ruta existente para visualizar su trayecto
+                        y obtener información detallada.
+                    </p>
+                </div>
+
+                <!-- RESUMEN DE RUTA -->
+                <section class="route-card" id="infoPanel">
+                    <div class="route-card-header">
+                        <div class="route-title">
+                            <span class="route-icon">〽️</span>
+                            <h3>Resumen de la Ruta</h3>
+                        </div>
+
+                        <button class="collapse-btn" type="button">−</button>
+                    </div>
+
+                    <div class="summary-grid">
+                        <div class="summary-item">
+                            <span class="summary-icon">⦿</span>
+                            <strong>Estado</strong>
+                            <div class="value" id="valueEstado">—</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-icon">👤</span>
+                            <strong>Conductor</strong>
+                            <div class="value" id="valueConductor">—</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-icon">🚗</span>
+                            <strong>Vehículo</strong>
+                            <div class="value" id="valueVehiculo">—</div>
+                        </div>
+
+                        <div class="summary-item">
+                            <span class="summary-icon">♙</span>
+                            <strong>Paradas</strong>
+                            <div class="value" id="valueParadas">—</div>
+                        </div>
+                    </div>
+
+                    <div class="info-box" id="infoBox">
+                        <span class="info-icon">ⓘ</span>
+                        <p id="infoText">
+                            Los datos se mostrarán aquí al seleccionar una ruta.
+                        </p>
+                    </div>
+
+                    <div id="infoContent"></div>
+                </section>
+
+            </section>
+
+        </aside>
+
+        <!-- MAPA -->
+        <section class="map-wrapper">
+            <div id="mapa"></div>
+        </section>
+
+    </main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/js/trayectos.js"></script>
+</body>
+</html>

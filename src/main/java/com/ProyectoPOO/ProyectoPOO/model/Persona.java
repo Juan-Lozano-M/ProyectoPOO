@@ -56,6 +56,20 @@ public class Persona {
     @EqualsAndHashCode.Exclude
     private Set<VehicleDriver> vehicleAssociations = new HashSet<>();
 
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<Trayecto> trayectos = new HashSet<>();
+
+    // Campos para licencia de conducción (solo aplica cuando personType = 'C')
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] drivingLicenseDocument;
+
+    @Column
+    private java.time.LocalDate drivingLicenseExpiry;
+
     @PrePersist
     @PreUpdate
     private void validate() {

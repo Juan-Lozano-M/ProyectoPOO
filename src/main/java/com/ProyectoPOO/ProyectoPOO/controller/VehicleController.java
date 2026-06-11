@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController // Expone endpoints REST con serialización JSON automática.
 @RequestMapping("/api/vehicles") // Ruta base del recurso vehículos.
@@ -27,7 +28,7 @@ public class VehicleController {
             return ResponseEntity.status(HttpStatus.CREATED).body(saved);
         } catch (IllegalArgumentException e) {
             // Error de validación de entrada/regla de negocio -> 400.
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -107,7 +108,7 @@ public class VehicleController {
             Vehicle updated = vehicleService.addDocumentToVehicle(id, vd);
             return ResponseEntity.ok(updated);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -115,11 +116,11 @@ public class VehicleController {
     public ResponseEntity<?> upsertDocuments(@PathVariable Long id, @RequestBody VehicleDocumentsBatchRequest request) {
         try {
             if (request == null || request.getDocuments() == null || request.getDocuments().isEmpty()) {
-                return ResponseEntity.badRequest().body("Debe enviar al menos un documento");
+                return ResponseEntity.badRequest().body(Map.of("error", "Debe enviar al menos un documento"));
             }
             return ResponseEntity.ok(vehicleService.upsertVehicleDocuments(id, request.getDocuments()));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -129,7 +130,7 @@ public class VehicleController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(vehicleService.assignVehicleToDriver(personaId, request.getVehicleId(), request.getAssociationDate(), request.getState()));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
@@ -140,7 +141,7 @@ public class VehicleController {
         try {
             return ResponseEntity.ok(vehicleService.changeDriverState(personaId, vehicleId, request.getState()));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 }

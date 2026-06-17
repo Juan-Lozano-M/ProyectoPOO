@@ -64,7 +64,7 @@ public class Persona {
     private Set<Trayecto> trayectos = new HashSet<>();
 
     // Campos para licencia de conducción (solo aplica cuando personType = 'C')
-    @Column(columnDefinition = "LONGBLOB")
+    @Column(columnDefinition = "bytea")
     private byte[] drivingLicenseDocument;
 
     @Column

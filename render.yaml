@@ -1,0 +1,45 @@
+# Blueprint de Render: crea la base de datos PostgreSQL y el web service (Docker)
+# y los conecta automaticamente. Para usarlo: en Render -> New -> Blueprint,
+# selecciona este repositorio. Render leera este archivo.
+# Docs: https://render.com/docs/blueprint-spec
+
+databases:
+  - name: vehiculos-db
+    databaseName: vehiculos_db
+    user: vehiculos
+    plan: free          # La BD gratuita de Render expira a los 30 dias.
+    region: oregon
+
+services:
+  - type: web
+    name: proyectopoo
+    runtime: docker
+    plan: free
+    region: oregon       # Debe coincidir con la region de la BD.
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true     # Redespliega en cada push a la rama conectada.
+    envVars:
+      # Datos de conexion inyectados desde la base de datos creada arriba.
+      - key: DB_HOST
+        fromDatabase:
+          name: vehiculos-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: vehiculos-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: vehiculos-db
+          property: database
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: vehiculos-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: vehiculos-db
+          property: password
+      # La API key de Google Maps NO se versiona: se ingresa en el dashboard de Render.
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false

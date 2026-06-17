@@ -46,9 +46,9 @@ public class VehicleDocument {
     @Enumerated(EnumType.STRING)
     private DocumentState state;
 
-    @Lob
+    // En PostgreSQL se usa bytea (no @Lob, que mapearia a un large object/OID).
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "pdf_blob", columnDefinition = "LONGBLOB")
+    @Column(name = "pdf_blob", columnDefinition = "bytea")
     @JsonIgnore
     private byte[] pdfBlob;
 

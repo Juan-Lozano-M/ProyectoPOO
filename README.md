@@ -1,6 +1,6 @@
 # ProyectoPOO - API REST de Vehiculos y Documentos
 
-API REST desarrollada con Spring Boot, JPA y MySQL para gestionar:
+API REST desarrollada con Spring Boot, JPA y PostgreSQL para gestionar:
 
 - Vehiculos
 - Documentos parametricos (catalogo/configuracion)
@@ -13,7 +13,7 @@ El proyecto esta orientado al taller de profundizacion de POO II (Entrega 1), us
 - Java 17
 - Spring Boot
 - Spring Data JPA
-- MySQL
+- PostgreSQL
 - Maven Wrapper (`mvnw`, `mvnw.cmd`)
 - Lombok
 - Jakarta Validation / Hibernate Validator
@@ -195,13 +195,16 @@ Archivo: `src/main/resources/application.properties`
 
 Propiedades actuales:
 
-- `spring.datasource.url=jdbc:mysql://localhost:3306/vehiculos_db`
-- `spring.datasource.username=root`
-- `spring.datasource.password=`
+- `spring.datasource.url=jdbc:postgresql://localhost:5432/vehiculos_db`
+- `spring.datasource.username=postgres`
+- `spring.datasource.password=postgres`
 - `spring.jpa.hibernate.ddl-auto=update`
 - `spring.jpa.show-sql=true`
 
-Ajusta usuario/password segun tu entorno local MySQL.
+Estas propiedades aceptan variables de entorno (`SPRING_DATASOURCE_URL`,
+`SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`, `PORT`,
+`GOOGLE_MAPS_API_KEY`) para el despliegue en Render. Ajusta usuario/password
+segun tu entorno local PostgreSQL.
 
 ## 7) Ejecucion del proyecto
 

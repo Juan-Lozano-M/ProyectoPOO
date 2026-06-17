@@ -1,0 +1,9 @@
+target/
+.idea/
+.agents/
+.claude/
+*.iml
+.git/
+.gitignore
+HELP.md
+README.md

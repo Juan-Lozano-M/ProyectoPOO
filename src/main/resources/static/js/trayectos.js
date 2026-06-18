@@ -1,3 +1,8 @@
+// Íconos SVG inline (estilo Lucide) usados en el contenido generado dinámicamente
+const ICON_USER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>';
+const ICON_TRUCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1z"></path><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>';
+const ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>';
+
 // Variables globales
 let mapa;
 let markers = [];
@@ -151,10 +156,10 @@ function displayTrayectos(trayectos) {
 
                     <div class="trayecto-conductor">
                         <span>
-                            👤 ${safeText(trayecto.conductorNombre)} ${safeText(trayecto.conductorApellido)}
+                            ${ICON_USER} ${safeText(trayecto.conductorNombre)} ${safeText(trayecto.conductorApellido)}
                         </span>
                         <span>
-                            🚗 ${safeText(trayecto.vehiclePlate)}
+                            ${ICON_TRUCK} ${safeText(trayecto.vehiclePlate)}
                         </span>
                     </div>
 
@@ -477,9 +482,7 @@ function clearSearch() {
     trayectosList.classList.add('empty-state');
 
     trayectosList.innerHTML = `
-        <div class="empty-icon">
-            <span>📍</span>
-        </div>
+        <div class="empty-icon">${ICON_PIN}</div>
 
         <h3>Cargando trayectos...</h3>
 

@@ -3,79 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProyectoPOO - Gestión de Rutas de Vehículos</title>
+    <title>ProyectoPOO · Gestión de Rutas de Vehículos</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600&display=swap">
+
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
 <div class="app">
+
     <!-- HEADER -->
     <header class="topbar">
         <div class="brand">
             <div class="brand-icon">
-                📦
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
             </div>
             <div class="brand-text">
                 <h1>ProyectoPOO</h1>
                 <p>Gestión de Rutas de Vehículos</p>
             </div>
         </div>
+
+        <nav class="topnav">
+            <a href="/swagger-ui/index.html" class="nav-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+                API
+            </a>
+
+            <a href="/web/trayectos" class="nav-link">
+                Abrir visualizador
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
+        </nav>
     </header>
 
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- HERO -->
     <main class="hero">
-        <div class="hero-content">
-            <div class="hero-icon">
-                🗺️
-            </div>
+        <div class="hero-grid">
 
-            <h1>Visualizador de Trayectos</h1>
+            <div class="hero-content">
+                <span class="eyebrow">Rutas · Conductores · Paradas</span>
 
-            <p class="hero-subtitle">
-                Explora y visualiza las rutas de vehículos en tiempo real
-            </p>
+                <h1 class="hero-title">
+                    Sigue cada <span class="accent">ruta</span><br>
+                    de principio a fin.
+                </h1>
 
-            <p class="hero-description">
-                Accede a la plataforma de gestión de trayectos para ver detalles completos
-                de rutas, conductores, vehículos y paradas en un mapa interactivo.
-            </p>
+                <p class="hero-desc">
+                    Consulta trayectos, conductores y paradas sobre un mapa interactivo.
+                    Busca por código y obtén el recorrido completo al instante.
+                </p>
 
-            <div class="hero-actions">
-                <a href="/web/trayectos" class="btn btn-primary">
-                    Ir al Visualizador de Trayectos
-                </a>
+                <div class="hero-actions">
+                    <a href="/web/trayectos" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                            <line x1="8" y1="2" x2="8" y2="18"></line>
+                            <line x1="16" y1="6" x2="16" y2="22"></line>
+                        </svg>
+                        Abrir visualizador
+                    </a>
 
-                <a href="#" class="btn btn-secondary" title="Próximamente">
-                    Documentación
-                </a>
-            </div>
-
-            <div class="features">
-                <div class="feature-item">
-                    <span class="feature-icon">🔍</span>
-                    <h3>Búsqueda Avanzada</h3>
-                    <p>Encuentra rutas por código fácilmente</p>
-                </div>
-
-                <div class="feature-item">
-                    <span class="feature-icon">🗺️</span>
-                    <h3>Mapa Interactivo</h3>
-                    <p>Visualiza trayectos en tiempo real</p>
-                </div>
-
-                <div class="feature-item">
-                    <span class="feature-icon">📊</span>
-                    <h3>Información Detallada</h3>
-                    <p>Acceso a datos de conductores y vehículos</p>
+                    <a href="/swagger-ui/index.html" class="btn btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                        Documentación API
+                    </a>
                 </div>
             </div>
+
+            <!-- SIGNATURE: panel con ruta animada -->
+            <div class="hero-visual" aria-hidden="true">
+                <div class="visual-panel">
+                    <div class="visual-bar">
+                        <span class="visual-dot"></span>
+                        <span class="visual-dot"></span>
+                        <span class="visual-dot"></span>
+                        <span class="visual-label">RUTA-042</span>
+                    </div>
+
+                    <svg class="route-svg" viewBox="0 0 400 280" preserveAspectRatio="xMidYMid meet">
+                        <defs>
+                            <linearGradient id="routeGrad" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#38bdf8"></stop>
+                                <stop offset="100%" stop-color="#6366f1"></stop>
+                            </linearGradient>
+                            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <path d="M40 0 L0 0 0 40" fill="none"
+                                      stroke="rgba(148,163,184,0.10)" stroke-width="1"></path>
+                            </pattern>
+                        </defs>
+
+                        <rect width="400" height="280" fill="url(#grid)"></rect>
+
+                        <!-- trazado -->
+                        <path class="route-path"
+                              d="M48 224 C 110 200, 120 120, 180 120 S 280 150, 300 92 S 350 60, 356 52"
+                              fill="none" stroke="url(#routeGrad)" stroke-width="4"
+                              stroke-linecap="round"></path>
+
+                        <!-- paradas -->
+                        <g class="stop" style="--d:0s">
+                            <circle cx="48" cy="224" r="11"></circle>
+                            <text x="48" y="228">1</text>
+                        </g>
+                        <g class="stop" style="--d:.5s">
+                            <circle cx="180" cy="120" r="11"></circle>
+                            <text x="180" y="124">2</text>
+                        </g>
+                        <g class="stop" style="--d:1s">
+                            <circle cx="300" cy="92" r="11"></circle>
+                            <text x="300" y="96">3</text>
+                        </g>
+                        <g class="stop stop-end" style="--d:1.5s">
+                            <circle cx="356" cy="52" r="11"></circle>
+                            <text x="356" y="56">4</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
         </div>
     </main>
 
+    <!-- FEATURES -->
+    <section class="features-section">
+        <div class="features">
+            <article class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <h3>Búsqueda por código</h3>
+                <p>Encuentra cualquier ruta escribiendo su código.</p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                        <line x1="8" y1="2" x2="8" y2="18"></line>
+                        <line x1="16" y1="6" x2="16" y2="22"></line>
+                    </svg>
+                </div>
+                <h3>Mapa interactivo</h3>
+                <p>Recorre las paradas y el trazado sobre el mapa.</p>
+            </article>
+
+            <article class="feature-card">
+                <div class="feature-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="8" y1="13" x2="16" y2="13"></line>
+                        <line x1="8" y1="17" x2="16" y2="17"></line>
+                    </svg>
+                </div>
+                <h3>Detalle completo</h3>
+                <p>Conductor, vehículo y cada parada en un solo lugar.</p>
+            </article>
+        </div>
+    </section>
+
     <!-- FOOTER -->
     <footer class="footer">
-        <p>&copy; 2026 ProyectoPOO. Todos los derechos reservados.</p>
+        <p>&copy; 2026 ProyectoPOO · Gestión de Rutas de Vehículos</p>
     </footer>
+
 </div>
 </body>
 </html>
-

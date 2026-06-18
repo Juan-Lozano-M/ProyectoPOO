@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visualizador de Trayectos - ProyectoPOO</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <link rel="stylesheet" href="/css/trayectos.css">
 </head>
@@ -16,17 +21,28 @@
     <header class="topbar">
         <div class="brand">
             <div class="brand-icon">
-                🗺️
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
             </div>
 
             <div class="brand-text">
                 <h1>Visualizador de Trayectos</h1>
-                <p>ProyectoPOO - Gestión de Rutas de Vehículos</p>
+                <p>ProyectoPOO · Gestión de Rutas de Vehículos</p>
             </div>
         </div>
 
         <button class="help-btn" type="button" title="Ayuda">
-
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            Ayuda
         </button>
     </header>
 
@@ -40,14 +56,18 @@
 
                 <div class="section-title">
                     <div class="section-icon">
-                        🔍
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
                     </div>
                     <h2>Búsqueda de Rutas</h2>
                 </div>
 
                 <form class="search-form" onsubmit="event.preventDefault(); searchRoute();">
                     <div class="form-group">
-                        <label for="routeCode">Código de Ruta:</label>
+                        <label for="routeCode">Código de Ruta</label>
 
                         <input
                                 type="text"
@@ -60,6 +80,11 @@
 
                     <div class="actions">
                         <button class="btn btn-primary" type="submit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
                             Buscar Ruta
                         </button>
 
@@ -76,7 +101,11 @@
                 <!-- ESTADO VACÍO -->
                 <div class="empty-state" id="trayectosList">
                     <div class="empty-icon">
-                        <span>📍</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
                     </div>
 
                     <h3>Ingrese un código de ruta para comenzar</h3>
@@ -91,7 +120,12 @@
                 <section class="route-card" id="infoPanel">
                     <div class="route-card-header">
                         <div class="route-title">
-                            <span class="route-icon">〽️</span>
+                            <span class="route-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                                </svg>
+                            </span>
                             <h3>Resumen de la Ruta</h3>
                         </div>
 
@@ -100,32 +134,64 @@
 
                     <div class="summary-grid">
                         <div class="summary-item">
-                            <span class="summary-icon">⦿</span>
+                            <span class="summary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M2 12h4l3 8 4-16 3 8h4"></path>
+                                </svg>
+                            </span>
                             <strong>Estado</strong>
                             <div class="value" id="valueEstado">—</div>
                         </div>
 
                         <div class="summary-item">
-                            <span class="summary-icon">👤</span>
+                            <span class="summary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </span>
                             <strong>Conductor</strong>
                             <div class="value" id="valueConductor">—</div>
                         </div>
 
                         <div class="summary-item">
-                            <span class="summary-icon">🚗</span>
+                            <span class="summary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 3h15v13H1z"></path>
+                                    <path d="M16 8h4l3 3v5h-7V8z"></path>
+                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                </svg>
+                            </span>
                             <strong>Vehículo</strong>
                             <div class="value" id="valueVehiculo">—</div>
                         </div>
 
                         <div class="summary-item">
-                            <span class="summary-icon">♙</span>
+                            <span class="summary-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </span>
                             <strong>Paradas</strong>
                             <div class="value" id="valueParadas">—</div>
                         </div>
                     </div>
 
                     <div class="info-box" id="infoBox">
-                        <span class="info-icon">ⓘ</span>
+                        <span class="info-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </span>
                         <p id="infoText">
                             Los datos se mostrarán aquí al seleccionar una ruta.
                         </p>

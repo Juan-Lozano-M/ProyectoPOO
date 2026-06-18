@@ -36,3 +36,8 @@ build/
 __pycache__/
 *.py[cod]
 *$py.class
+
+### Claude ###
+.claude/
+.agents/
+CLAUDE.md

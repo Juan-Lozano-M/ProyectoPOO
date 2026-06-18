@@ -23,11 +23,14 @@ PRE-REQUISITO IMPORTANTE:
 
 USO (PowerShell):
     $env:MYSQL_PASSWORD = ""              # vacia si tu XAMPP no tiene clave
-    $env:POSTGRES_URL = "postgresql://vehiculos:BzKZ2qsVWD3yqRAY4xqe4C3ww9WoNaAd@dpg-d8p2np0g4nts73fh3ht0-a.oregon-postgres.render.com/vehiculos_db_pxwv"
+    $env:POSTGRES_URL = "postgresql://USUARIO:PASSWORD@HOST.oregon-postgres.render.com/NOMBRE_BD"
     python scripts/migrar_mysql_a_postgres.py
 
 El POSTGRES_URL es la "External Database URL" que te da Render en el panel de
 la base de datos vehiculos-db (empieza con postgresql://).
+
+NUNCA pongas la URL real con credenciales en este archivo: pasala siempre por
+la variable de entorno POSTGRES_URL en tu sesion, asi el secreto no se versiona.
 """
 
 import os
